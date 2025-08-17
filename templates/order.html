@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Order Details{% endblock %}
+
+{% block content %}
+<div class="order-container">
+    {% if name %}
+        <h2>Thank you for your order, {{ name }}!</h2>
+    {% else %}
+        <h2>Order Details</h2>
+    {% endif %}
+    
+    {% if order_id %}
+        <div class="order-summary">
+            <h3>Order #{{ order_id }}</h3>
+            <p>Order Date: {{ order_date|default('N/A') }}</p>
+            <p>Status: <span class="status-{{ status|lower }}">{{ status|default('Processing') }}</span></p>
+        </div>
+        
+        <div class="order-items">
+            <h3>Ordered Items</h3>
+            {% if items %}
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ "%.2f"|format(item.price) }}</td>
+                            <td>${{ "%.2f"|format(item.quantity * item.price) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><strong>Subtotal</strong></td>
+                            <td>${{ "%.2f"|format(subtotal|default(0)) }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><strong>Tax</strong></td>
+                            <td>${{ "%.2f"|format(tax|default(0)) }}</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="3"><strong>Total</strong></td>
+                            <td>${{ "%.2f"|format(total|default(0)) }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            {% else %}
+                <p>No items found in this order.</p>
+            {% endif %}
+        </div>
+
+        <div class="shipping-details">
+            <h3>Shipping Information</h3>
+            <address>
+                {{ shipping_address.name|default(name) }}<br>
+                {{ shipping_address.street|default('') }}<br>
+                {{ shipping_address.city|default('') }}, {{ shipping_address.state|default('') }} {{ shipping_address.zip|default('') }}<br>
+                {{ shipping_address.country|default('') }}
+            </address>
+            <p>Estimated Delivery: {{ delivery_date|default('Processing') }}</p>
+        </div>
+
+        <div class="order-actions">
+            <button class="btn btn-primary">Track Order</button>
+            <button class="btn">Cancel Order</button>
+            <button class="btn">Contact Support</button>
+        </div>
+    {% else %}
+        <p>No order information is available. Please check your order ID and try again.</p>
+    {% endif %}
+    
+    <div class="navigation">
+        <a href="/" class="btn">Back to Home</a>
+        <a href="/orders" class="btn">View All Orders</a>
+    </div>
+</div>
+{% endblock %}
