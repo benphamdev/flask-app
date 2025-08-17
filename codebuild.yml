@@ -1,5 +1,11 @@
 version: 0.2
 
+env:
+  variables:
+    AWS_ACCOUNT_ID: "787587782904" # replace with your AWS Account ID
+    AWS_DEFAULT_REGION: "us-east-1" # replace with your preferred AWS region
+    IMAGE_REPO_NAME: "ecs" # replace with your ECR repository name
+
 phases:
   install:
     # runtime-versions:
